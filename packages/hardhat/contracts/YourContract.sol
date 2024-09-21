@@ -17,7 +17,8 @@ contract YourContract {
 	address public immutable owner;
 	string public greeting = "StakeStep: build your habits";
 
-  struct Task {
+  
+ struct Task {
         bool completed;
         uint256 votesFor;
         uint256 votesAgainst;
@@ -34,18 +35,20 @@ contract YourContract {
         string description;
         mapping(address => bool) participants;
         address[] participantList;
-        mapping(address => mapping(uint256 => Task)) tasks; // participant -> day -> Task
+        mapping(address => mapping(uint256 => Task)) tasks;
+        mapping(address => uint256) participantScores;
+        bool fundsDistributed;
     }
-  
-    mapping(uint256 => Challenge) public challenges;
-    uint256 public challengeCounter;
 
-    event ChallengeCreated(uint256 indexed challengeId, address creator, uint256 stakeAmount, uint256 durationInDays, string challengeName);
-    event UserJoined(uint256 indexed challengeId, address user);
-    event TaskCompleted(uint256 indexed challengeId, address user, uint256 day);
-    event TaskVoted(uint256 indexed challengeId, address voter, address participant, uint256 day, bool inFavor);
-    event FundsRefunded(uint256 indexed challengeId, address user, uint256 amount);// Events: a way to emit log statements from smart contract that can be listened to by external parties
-
+    mapping(bytes32 => Challenge) public challenges;
+    bytes32[] public challengeIds;
+    
+    event ChallengeCreated(bytes32 indexed challengeId, address creator, uint256 stakeAmount, uint256 durationInDays, string challengeName);
+    event UserJoined(bytes32 indexed challengeId, address user);
+    event TaskCompleted(bytes32 indexed challengeId, address user, uint256 day);
+    event TaskVoted(bytes32 indexed challengeId, address voter, address participant, uint256 day, bool inFavor);
+    event FundsRefunded(bytes32 indexed challengeId, address user, uint256 amount);// Events: a way to emit log statements from smart contract that can be listened to by external parties
+    event AdditionalFundsDistributed(bytes32 indexed challengeId, address participant, uint256 amount);
 	// Constructor: Called once on contract deployment
 	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
 	constructor(address _owner) {
@@ -61,15 +64,16 @@ contract YourContract {
 	}
 
    function createChallenge(
+        bytes32 _challengeId,
         uint256 _durationInDays, 
         string memory _challengeName, 
         string memory _description
-    ) external payable returns (uint256) {
+    ) external payable returns (bytes32) {
         require(msg.value > 0, "Must stake some ETH to create a challenge");
         require(_durationInDays > 0, "Duration must be greater than 0");
+        require(challenges[_challengeId].creator == address(0), "Challenge ID already exists");
         
-        uint256 challengeId = challengeCounter++;
-        Challenge storage newChallenge = challenges[challengeId];
+        Challenge storage newChallenge = challenges[_challengeId];
         newChallenge.creator = msg.sender;
         newChallenge.stakeAmount = msg.value;
         newChallenge.totalStaked = msg.value;
@@ -80,11 +84,13 @@ contract YourContract {
         newChallenge.participants[msg.sender] = true;
         newChallenge.participantList.push(msg.sender);
         
-        emit ChallengeCreated(challengeId, msg.sender, msg.value, _durationInDays, _challengeName);
-        return challengeId;
+        challengeIds.push(_challengeId);
+        
+        emit ChallengeCreated(_challengeId, msg.sender, msg.value, _durationInDays, _challengeName);
+        return _challengeId;
     }
 
-    function joinChallenge(uint256 _challengeId) external payable {
+    function joinChallenge(bytes32 _challengeId) external payable {
         Challenge storage challenge = challenges[_challengeId];
         require(!challenge.participants[msg.sender], "Already joined this challenge");
         require(msg.value == challenge.stakeAmount, "Must stake exact amount");
@@ -96,7 +102,7 @@ contract YourContract {
         emit UserJoined(_challengeId, msg.sender);
     }
 
-function voteOnTask(uint256 _challengeId, address _participant, uint256 _day, bool _inFavor) external {
+function voteOnTask(bytes32 _challengeId, address _participant, uint256 _day, bool _inFavor) external {
         Challenge storage challenge = challenges[_challengeId];
         require(challenge.participants[msg.sender], "Only participants can vote");
         require(_day < challenge.durationInDays, "Invalid day");
@@ -120,28 +126,76 @@ function voteOnTask(uint256 _challengeId, address _participant, uint256 _day, bo
     }
 
     
-    function claimRefund(uint256 _challengeId) external {
-        Challenge storage challenge = challenges[_challengeId];
-        require(challenge.participants[msg.sender], "Not a participant");
-        require(block.timestamp >= challenge.creationTime + challenge.durationInDays * 1 days, "Challenge not ended");
+    function claimRefund(bytes32 _challengeId) external {
+      Challenge storage challenge = challenges[_challengeId];
+      require(challenge.participants[msg.sender], "Not a participant");
+      require(block.timestamp >= challenge.creationTime + challenge.durationInDays * 1 days, "Challenge not ended");
 
-        uint256 completedTasks = 0;
-        for (uint256 i = 0; i < challenge.durationInDays; i++) {
-            if (challenge.tasks[msg.sender][i].completed) {
-                completedTasks++;
-            }
-        }
+      uint256 completedTasks = 0;
+      for (uint256 i = 0; i < challenge.durationInDays; i++) {
+          if (challenge.tasks[msg.sender][i].completed) {
+              completedTasks++;
+          }
+      }
 
-        uint256 refundAmount = (challenge.stakeAmount * completedTasks) / challenge.durationInDays;
-        challenge.participants[msg.sender] = false;
-        challenge.totalStaked -= challenge.stakeAmount;
+      uint256 refundAmount = (challenge.stakeAmount * completedTasks) / challenge.durationInDays;
+      challenge.participants[msg.sender] = false;
+      challenge.totalStaked -= challenge.stakeAmount;
 
-        payable(msg.sender).transfer(refundAmount);
-        emit FundsRefunded(_challengeId, msg.sender, refundAmount);
+      // Update the participant's score
+      challenge.participantScores[msg.sender] = completedTasks;
+
+      payable(msg.sender).transfer(refundAmount);
+      emit FundsRefunded(_challengeId, msg.sender, refundAmount);
+  }
+
+  function distributeRemainingFunds(bytes32 _challengeId) external {
+      Challenge storage challenge = challenges[_challengeId];
+      require(block.timestamp >= challenge.creationTime + challenge.durationInDays * 1 days + 7 days, "Wait period not over");
+      require(!challenge.fundsDistributed, "Funds already distributed");
+
+      uint256 remainingFunds = address(this).balance;
+      require(remainingFunds > 0, "No funds to distribute");
+
+      uint256 totalScore = 0;
+      uint256 highestScore = 0;
+      uint256 topPerformersCount = 0;
+
+      // Calculate total score and find highest score
+      for (uint256 i = 0; i < challenge.participantList.length; i++) {
+          address participant = challenge.participantList[i];
+          uint256 score = challenge.participantScores[participant];
+          totalScore += score;
+          if (score > highestScore) {
+              highestScore = score;
+              topPerformersCount = 1;
+          } else if (score == highestScore) {
+              topPerformersCount++;
+          }
+      }
+
+      // Distribute funds to top performers
+      uint256 distributionPerTopPerformer = remainingFunds / topPerformersCount;
+      for (uint256 i = 0; i < challenge.participantList.length; i++) {
+          address participant = challenge.participantList[i];
+          if (challenge.participantScores[participant] == highestScore) {
+              payable(participant).transfer(distributionPerTopPerformer);
+              emit AdditionalFundsDistributed(_challengeId, participant, distributionPerTopPerformer);
+          }
+      }
+
+      challenge.fundsDistributed = true;
+}
+
+    function getAllChallenges() external view returns (bytes32[] memory) {
+        return challengeIds;
     }
 
+    function getChallengeCount() external view returns (uint256) {
+        return challengeIds.length;
+    }
 
-    function getChallengeInfo(uint256 _challengeId) external view returns (
+    function getChallengeInfo(bytes32 _challengeId) external view returns (
         address creator,
         uint256 stakeAmount,
         uint256 totalStaked,
@@ -164,11 +218,11 @@ function voteOnTask(uint256 _challengeId, address _participant, uint256 _day, bo
         );
     }
 
-    function getParticipants(uint256 _challengeId) external view returns (address[] memory) {
+    function getParticipants(bytes32 _challengeId) external view returns (address[] memory) {
         return challenges[_challengeId].participantList;
     }
 
-    function getTaskStatus(uint256 _challengeId, address _participant, uint256 _day) external view returns (
+    function getTaskStatus(bytes32 _challengeId, address _participant, uint256 _day) external view returns (
         bool completed,
         uint256 votesFor,
         uint256 votesAgainst
