@@ -17,12 +17,18 @@ contract YourContract {
 	address public immutable owner;
 	string public greeting = "StakeStep: build your habits";
 
+struct PoolMetadata {
+    string challengeName;
+    string description;
+}
+
  struct Pool {
         address creator;
         uint256 stakeAmount;
         uint256 totalStaked;
         uint256 creationTime;
         uint256 lockPeriod; // in days
+        PoolMetadata metadata;
         mapping(address => bool) participants;
         address[] participantList;
     }
@@ -49,7 +55,7 @@ contract YourContract {
 		_;
 	}
 
-   function createPool(uint256 _lockPeriod) external payable returns (uint256) {
+   function createPool(uint256 _lockPeriod, string memory _challengeName, string memory _description) external payable returns (uint256) {
         require(msg.value > 0, "Must stake some ETH to create a pool");
         require(_lockPeriod > 0, "Lock period must be greater than 0");
         
@@ -60,6 +66,7 @@ contract YourContract {
         newPool.totalStaked = msg.value;
         newPool.creationTime = block.timestamp;
         newPool.lockPeriod = _lockPeriod;
+        newPool.metadata = PoolMetadata(_challengeName, _description);
         newPool.participants[msg.sender] = true;
         newPool.participantList.push(msg.sender);
         
@@ -113,13 +120,16 @@ contract YourContract {
         emit FundsRefunded(_poolId, msg.sender, refundAmount);
     }
 
+
     function getPoolInfo(uint256 _poolId) external view returns (
         address creator,
         uint256 stakeAmount,
         uint256 totalStaked,
         uint256 creationTime,
         uint256 lockPeriod,
-        uint256 participantCount
+        uint256 participantCount,
+        string memory challengeName,
+        string memory description
     ) {
         require(_poolId < poolCounter, "Pool does not exist");
         Pool storage pool = pools[_poolId];
@@ -129,7 +139,9 @@ contract YourContract {
             pool.totalStaked,
             pool.creationTime,
             pool.lockPeriod,
-            pool.participantList.length
+            pool.participantList.length,
+            pool.metadata.challengeName,
+            pool.metadata.description
         );
     }
 
