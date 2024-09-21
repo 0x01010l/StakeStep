@@ -1,38 +1,128 @@
-# 🏗 Scaffold-ETH 2
+# StakeStep👟
 
-<h4 align="center">
-  <a href="https://docs.scaffoldeth.io">Documentation</a> |
-  <a href="https://scaffoldeth.io">Website</a>
-</h4>
+# StakeStep: Habit Formation with Accountability
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts.
+## Introduction
 
-⚙️ Built using NextJS, RainbowKit, Hardhat, Wagmi, Viem, and Typescript.
+StakeStep is a revolutionary habit-forming app that combines the power of social accountability with financial incentives. In today's fast-paced world, many of us struggle to build and maintain positive habits, despite our best intentions. StakeStep addresses this challenge by creating a unique ecosystem where users can set personal goals, invite friends or colleagues to join their accountability pool, and put their money where their mouth is.
 
-- ✅ **Contract Hot Reload**: Your frontend auto-adapts to your smart contract as you edit it.
-- 🪝 **[Custom hooks](https://docs.scaffoldeth.io/hooks/)**: Collection of React hooks wrapper around [wagmi](https://wagmi.sh/) to simplify interactions with smart contracts with typescript autocompletion.
-- 🧱 [**Components**](https://docs.scaffoldeth.io/components/): Collection of common web3 components to quickly build your frontend.
-- 🔥 **Burner Wallet & Local Faucet**: Quickly test your application with a burner wallet and local faucet.
-- 🔐 **Integration with Wallet Providers**: Connect to different wallet providers and interact with the Ethereum network.
+By leveraging blockchain technology and smart contracts, StakeStep ensures transparency and fairness in the goal-setting and verification process. Users can create or join pools, set specific, time-bound tasks, and stake cryptocurrency as a commitment to their goals. The app's consensus mechanism allows pool participants to verify task completion, adding an extra layer of motivation and accountability.
 
-![Debug Contracts tab](https://github.com/scaffold-eth/scaffold-eth-2/assets/55535804/b237af0c-5027-4849-a5c1-2e31495cccb1)
+Whether you're looking to exercise more, save money, learn a new skill, or break a bad habit, StakeStep provides the structure and incentives to help you succeed. With StakeStep, transform your intentions into actions and your actions into lasting habits.
 
-## Requirements
+## Use Cases
 
-Before you begin, you need to install the following tools:
+1. **Fitness Challenge**
 
-- [Node (>= v18.17)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+   - Goal: Complete 10,000 steps daily for 30 days
+   - Stake: 0.1 ETH
+   - Pool: 5 friends
+   - Verification: Data from fitness trackers synced with the app
+
+2. **Savings Drive**
+
+   - Goal: Save $500 per month for 6 months
+   - Stake: $100 worth of stablecoin
+   - Pool: Family members
+   - Verification: Bank statement screenshots or integration with personal finance apps
+
+3. **Language Learning**
+
+   - Goal: Complete 1 hour of language study daily for 90 days
+   - Stake: 0.05 ETH
+   - Pool: Language exchange partners
+   - Verification: Integration with language learning apps or daily check-ins with pool members
+
+4. **Productivity Boost**
+
+   - Goal: Maintain a 5-hour deep work streak for 20 workdays
+   - Stake: 0.2 ETH
+   - Pool: Coworkers or professional network
+   - Verification: Time tracking app integration or end-of-day reports
+
+5. **Quit Smoking**
+
+   - Goal: No cigarettes for 60 days
+   - Stake: $200 worth of cryptocurrency
+   - Pool: Support group members
+   - Verification: Daily check-ins and consensus voting by pool members
+
+6. **Mindfulness Practice**
+
+   - Goal: Meditate for 20 minutes daily for 30 days
+   - Stake: 0.08 ETH
+   - Pool: Meditation group members
+   - Verification: Integration with meditation apps or daily logged sessions
+
+7. **Writing Challenge**
+
+   - Goal: Write 500 words daily for 30 days
+   - Stake: 0.1 ETH
+   - Pool: Writing group or accountability partners
+   - Verification: Word count submissions or integration with writing apps
+
+8. **Hydration Habit**
+   - Goal: Drink 8 glasses of water daily for 21 days
+   - Stake: 0.05 ETH
+   - Pool: Health-conscious friends
+   - Verification: Manual logging or smart water bottle integration
+
+These use cases demonstrate the versatility of StakeStep across various personal development areas, showcasing how it can be adapted to different goals, timeframes, and verification methods. The app's flexibility allows users to create custom challenges tailored to their specific needs and interests, all while leveraging the power of social accountability and financial incentives.
+
+## Evaluation of StakeStep Against Hackathon Tracks
+
+### 1. Blockchain for Sustainable Development Goals (SDGs)
+
+StakeStep aligns well with this track, particularly for the following SDGs:
+
+- Goal 3: Good Health and Well-being (fitness, mindfulness, quitting smoking)
+- Goal 4: Quality Education (language learning, productivity)
+- Goal 12: Responsible Consumption (savings goals)
+
+Strengths:
+
+- Encourages positive habit formation, contributing to individual and community well-being
+- Uses blockchain for transparency and accountability
+
+Areas for improvement:
+
+- Could more directly address global challenges like poverty or climate action
+
+### 2. Onboarding the Future - Ethereum for Everyone
+
+StakeStep has potential in this track:
+
+Strengths:
+
+- User-friendly concept that could introduce new users to Ethereum
+- Gamification elements through challenges and rewards
+
+Areas for improvement:
+
+- Could incorporate more privacy-enhancing features
+- Might need additional onboarding features for crypto newcomers
+
+### 3. Ethereum and L2s
+
+StakeStep is well-suited for this track:
+
+Strengths:
+
+- Uses smart contracts for managing stakes and consensus
+- Could benefit from L2 solutions for faster, cheaper transactions
+
+Areas for improvement:
+
+- Could explore more complex DeFi integrations
 
 ## Quickstart
 
-To get started with Scaffold-ETH 2, follow the steps below:
+To get started with StakeStep, follow the steps below:
 
 1. Install dependencies if it was skipped in CLI:
 
 ```
-cd my-dapp-example
+cd StakeStep
 yarn install
 ```
 
@@ -61,20 +151,3 @@ yarn start
 Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
 
 Run smart contract test with `yarn hardhat:test`
-
-- Edit your smart contract `YourContract.sol` in `packages/hardhat/contracts`
-- Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
-
-
-## Documentation
-
-Visit our [docs](https://docs.scaffoldeth.io) to learn how to start building with Scaffold-ETH 2.
-
-To know more about its features, check out our [website](https://scaffoldeth.io).
-
-## Contributing to Scaffold-ETH 2
-
-We welcome contributions to Scaffold-ETH 2!
-
-Please see [CONTRIBUTING.MD](https://github.com/scaffold-eth/scaffold-eth-2/blob/main/CONTRIBUTING.md) for more information and guidelines for contributing to Scaffold-ETH 2.
