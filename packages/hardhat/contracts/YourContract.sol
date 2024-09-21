@@ -17,30 +17,38 @@ contract YourContract {
 	address public immutable owner;
 	string public greeting = "StakeStep: build your habits";
 
-struct PoolMetadata {
-    string challengeName;
-    string description;
-}
+  
+ struct Task {
+        bool completed;
+        uint256 votesFor;
+        uint256 votesAgainst;
+        mapping(address => bool) hasVoted;
+    }
 
- struct Pool {
+    struct Challenge {
         address creator;
         uint256 stakeAmount;
         uint256 totalStaked;
         uint256 creationTime;
-        uint256 lockPeriod; // in days
-        PoolMetadata metadata;
+        uint256 durationInDays;
+        string challengeName;
+        string description;
         mapping(address => bool) participants;
         address[] participantList;
+        mapping(address => mapping(uint256 => Task)) tasks;
+        mapping(address => uint256) participantScores;
+        bool fundsDistributed;
     }
 
-  mapping(uint256 => Pool) public pools;
-  uint256 public poolCounter;
-
-  event PoolCreated(uint256 indexed poolId, address creator, uint256 stakeAmount, uint256 lockPeriod);
-  event UserAdded(uint256 indexed poolId, address user);
-  event UserStaked(uint256 indexed poolId, address user, uint256 amount);
-  event FundsRefunded(uint256 indexed poolId, address user, uint256 amount);	// Events: a way to emit log statements from smart contract that can be listened to by external parties
-
+    mapping(bytes32 => Challenge) public challenges;
+    bytes32[] public challengeIds;
+    
+    event ChallengeCreated(bytes32 indexed challengeId, address creator, uint256 stakeAmount, uint256 durationInDays, string challengeName);
+    event UserJoined(bytes32 indexed challengeId, address user);
+    event TaskCompleted(bytes32 indexed challengeId, address user, uint256 day);
+    event TaskVoted(bytes32 indexed challengeId, address voter, address participant, uint256 day, bool inFavor);
+    event FundsRefunded(bytes32 indexed challengeId, address user, uint256 amount);// Events: a way to emit log statements from smart contract that can be listened to by external parties
+    event AdditionalFundsDistributed(bytes32 indexed challengeId, address participant, uint256 amount);
 	// Constructor: Called once on contract deployment
 	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
 	constructor(address _owner) {
@@ -55,105 +63,173 @@ struct PoolMetadata {
 		_;
 	}
 
-   function createPool(uint256 _lockPeriod, string memory _challengeName, string memory _description) external payable returns (uint256) {
-        require(msg.value > 0, "Must stake some ETH to create a pool");
-        require(_lockPeriod > 0, "Lock period must be greater than 0");
+   function createChallenge(
+        bytes32 _challengeId,
+        uint256 _durationInDays, 
+        string memory _challengeName, 
+        string memory _description
+    ) external payable returns (bytes32) {
+        require(msg.value > 0, "Must stake some ETH to create a challenge");
+        require(_durationInDays > 0, "Duration must be greater than 0");
+        require(challenges[_challengeId].creator == address(0), "Challenge ID already exists");
         
-        uint256 poolId = poolCounter++;
-        Pool storage newPool = pools[poolId];
-        newPool.creator = msg.sender;
-        newPool.stakeAmount = msg.value;
-        newPool.totalStaked = msg.value;
-        newPool.creationTime = block.timestamp;
-        newPool.lockPeriod = _lockPeriod;
-        newPool.metadata = PoolMetadata(_challengeName, _description);
-        newPool.participants[msg.sender] = true;
-        newPool.participantList.push(msg.sender);
+        Challenge storage newChallenge = challenges[_challengeId];
+        newChallenge.creator = msg.sender;
+        newChallenge.stakeAmount = msg.value;
+        newChallenge.totalStaked = msg.value;
+        newChallenge.creationTime = block.timestamp;
+        newChallenge.durationInDays = _durationInDays;
+        newChallenge.challengeName = _challengeName;
+        newChallenge.description = _description;
+        newChallenge.participants[msg.sender] = true;
+        newChallenge.participantList.push(msg.sender);
         
-        emit PoolCreated(poolId, msg.sender, msg.value, _lockPeriod);
-        emit UserStaked(poolId, msg.sender, msg.value);
-        return poolId;
+        challengeIds.push(_challengeId);
+        
+        emit ChallengeCreated(_challengeId, msg.sender, msg.value, _durationInDays, _challengeName);
+        return _challengeId;
     }
 
-   function addToPool(uint256 _poolId, address _user) external {
-        require(_poolId < poolCounter, "Pool does not exist");
-        Pool storage pool = pools[_poolId];
-        require(msg.sender == pool.creator, "Only pool creator can add users");
-        require(!pool.participants[_user], "User already in pool");
-        
-        pool.participants[_user] = true;
-        pool.participantList.push(_user);
-        emit UserAdded(_poolId, _user);
+    function joinChallenge(bytes32 _challengeId) external payable {
+        Challenge storage challenge = challenges[_challengeId];
+        require(!challenge.participants[msg.sender], "Already joined this challenge");
+        require(msg.value == challenge.stakeAmount, "Must stake exact amount");
+        require(block.timestamp < challenge.creationTime + challenge.durationInDays * 1 days, "Challenge has ended");
+
+        challenge.participants[msg.sender] = true;
+        challenge.participantList.push(msg.sender);
+        challenge.totalStaked += msg.value;
+        emit UserJoined(_challengeId, msg.sender);
     }
 
-    function stakeToPool(uint256 _poolId) external payable {
-        require(_poolId < poolCounter, "Pool does not exist");
-        Pool storage pool = pools[_poolId];
-        require(pool.participants[msg.sender], "You are not invited to this pool");
-        require(msg.value == pool.stakeAmount, "Must stake exact amount");
-        require(block.timestamp < pool.creationTime + pool.lockPeriod * 1 days, "Pool is locked");
+function voteOnTask(bytes32 _challengeId, address _participant, uint256 _day, bool _inFavor) external {
+        Challenge storage challenge = challenges[_challengeId];
+        require(challenge.participants[msg.sender], "Only participants can vote");
+        require(_day < challenge.durationInDays, "Invalid day");
+        require(!challenge.tasks[_participant][_day].hasVoted[msg.sender], "Already voted");
 
-        pool.totalStaked += msg.value;
-        emit UserStaked(_poolId, msg.sender, msg.value);
-    }
+        Task storage task = challenge.tasks[_participant][_day];
+        task.hasVoted[msg.sender] = true;
 
-    function refund(uint256 _poolId) external {
-        require(_poolId < poolCounter, "Pool does not exist");
-        Pool storage pool = pools[_poolId];
-        require(pool.participants[msg.sender], "You are not in this pool");
-        require(block.timestamp >= pool.creationTime + pool.lockPeriod * 1 days, "Pool is still locked");
-
-        uint256 refundAmount = pool.stakeAmount;
-        pool.totalStaked -= refundAmount;
-        pool.participants[msg.sender] = false;
-
-        // Remove user from participantList
-        for (uint i = 0; i < pool.participantList.length; i++) {
-            if (pool.participantList[i] == msg.sender) {
-                pool.participantList[i] = pool.participantList[pool.participantList.length - 1];
-                pool.participantList.pop();
-                break;
-            }
+        if (_inFavor) {
+            task.votesFor++;
+        } else {
+            task.votesAgainst++;
         }
 
-        payable(msg.sender).transfer(refundAmount);
-        emit FundsRefunded(_poolId, msg.sender, refundAmount);
+        if (task.votesFor > challenge.participantList.length / 2) {
+            task.completed = true;
+            emit TaskCompleted(_challengeId, _participant, _day);
+        }
+
+        emit TaskVoted(_challengeId, msg.sender, _participant, _day, _inFavor);
     }
 
+    
+    function claimRefund(bytes32 _challengeId) external {
+      Challenge storage challenge = challenges[_challengeId];
+      require(challenge.participants[msg.sender], "Not a participant");
+      require(block.timestamp >= challenge.creationTime + challenge.durationInDays * 1 days, "Challenge not ended");
 
-    function getPoolInfo(uint256 _poolId) external view returns (
+      uint256 completedTasks = 0;
+      for (uint256 i = 0; i < challenge.durationInDays; i++) {
+          if (challenge.tasks[msg.sender][i].completed) {
+              completedTasks++;
+          }
+      }
+
+      uint256 refundAmount = (challenge.stakeAmount * completedTasks) / challenge.durationInDays;
+      challenge.participants[msg.sender] = false;
+      challenge.totalStaked -= challenge.stakeAmount;
+
+      // Update the participant's score
+      challenge.participantScores[msg.sender] = completedTasks;
+
+      payable(msg.sender).transfer(refundAmount);
+      emit FundsRefunded(_challengeId, msg.sender, refundAmount);
+  }
+
+  function distributeRemainingFunds(bytes32 _challengeId) external {
+      Challenge storage challenge = challenges[_challengeId];
+      require(block.timestamp >= challenge.creationTime + challenge.durationInDays * 1 days + 7 days, "Wait period not over");
+      require(!challenge.fundsDistributed, "Funds already distributed");
+
+      uint256 remainingFunds = address(this).balance;
+      require(remainingFunds > 0, "No funds to distribute");
+
+      uint256 totalScore = 0;
+      uint256 highestScore = 0;
+      uint256 topPerformersCount = 0;
+
+      // Calculate total score and find highest score
+      for (uint256 i = 0; i < challenge.participantList.length; i++) {
+          address participant = challenge.participantList[i];
+          uint256 score = challenge.participantScores[participant];
+          totalScore += score;
+          if (score > highestScore) {
+              highestScore = score;
+              topPerformersCount = 1;
+          } else if (score == highestScore) {
+              topPerformersCount++;
+          }
+      }
+
+      // Distribute funds to top performers
+      uint256 distributionPerTopPerformer = remainingFunds / topPerformersCount;
+      for (uint256 i = 0; i < challenge.participantList.length; i++) {
+          address participant = challenge.participantList[i];
+          if (challenge.participantScores[participant] == highestScore) {
+              payable(participant).transfer(distributionPerTopPerformer);
+              emit AdditionalFundsDistributed(_challengeId, participant, distributionPerTopPerformer);
+          }
+      }
+
+      challenge.fundsDistributed = true;
+}
+
+    function getAllChallenges() external view returns (bytes32[] memory) {
+        return challengeIds;
+    }
+
+    function getChallengeCount() external view returns (uint256) {
+        return challengeIds.length;
+    }
+
+    function getChallengeInfo(bytes32 _challengeId) external view returns (
         address creator,
         uint256 stakeAmount,
         uint256 totalStaked,
         uint256 creationTime,
-        uint256 lockPeriod,
+        uint256 durationInDays,
         uint256 participantCount,
         string memory challengeName,
         string memory description
     ) {
-        require(_poolId < poolCounter, "Pool does not exist");
-        Pool storage pool = pools[_poolId];
+        Challenge storage challenge = challenges[_challengeId];
         return (
-            pool.creator,
-            pool.stakeAmount,
-            pool.totalStaked,
-            pool.creationTime,
-            pool.lockPeriod,
-            pool.participantList.length,
-            pool.metadata.challengeName,
-            pool.metadata.description
+            challenge.creator,
+            challenge.stakeAmount,
+            challenge.totalStaked,
+            challenge.creationTime,
+            challenge.durationInDays,
+            challenge.participantList.length,
+            challenge.challengeName,
+            challenge.description
         );
     }
 
-    function getPoolParticipants(uint256 _poolId) external view returns (address[] memory) {
-        require(_poolId < poolCounter, "Pool does not exist");
-        return pools[_poolId].participantList;
+    function getParticipants(bytes32 _challengeId) external view returns (address[] memory) {
+        return challenges[_challengeId].participantList;
     }
 
-    function isUserInPool(uint256 _poolId, address _user) external view returns (bool) {
-        require(_poolId < poolCounter, "Pool does not exist");
-        return pools[_poolId].participants[_user];
-    }    /**
+    function getTaskStatus(bytes32 _challengeId, address _participant, uint256 _day) external view returns (
+        bool completed,
+        uint256 votesFor,
+        uint256 votesAgainst
+    ) {
+        Task storage task = challenges[_challengeId].tasks[_participant][_day];
+        return (task.completed, task.votesFor, task.votesAgainst);
+    }  /**
 	 * Function that allows the owner to withdraw all the Ether in the contract
 	 * The function can only be called by the owner of the contract as defined by the isOwner modifier
 	 */

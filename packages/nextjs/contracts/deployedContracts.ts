@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+      address: "0xc5a5C42992dECbae36851359345FE25997F5C42d",
       abi: [
         {
           inputs: [
@@ -25,9 +25,71 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "participant",
+              type: "address",
+            },
+            {
+              indexed: false,
               internalType: "uint256",
-              name: "poolId",
+              name: "amount",
               type: "uint256",
+            },
+          ],
+          name: "AdditionalFundsDistributed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "creator",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "stakeAmount",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "durationInDays",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "challengeName",
+              type: "string",
+            },
+          ],
+          name: "ChallengeCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
             },
             {
               indexed: false,
@@ -50,59 +112,9 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
-              internalType: "uint256",
-              name: "poolId",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "address",
-              name: "creator",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "stakeAmount",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "lockPeriod",
-              type: "uint256",
-            },
-          ],
-          name: "PoolCreated",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "poolId",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "address",
-              name: "user",
-              type: "address",
-            },
-          ],
-          name: "UserAdded",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "poolId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
             },
             {
               indexed: false,
@@ -113,69 +125,97 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "uint256",
-              name: "amount",
+              name: "day",
               type: "uint256",
             },
           ],
-          name: "UserStaked",
+          name: "TaskCompleted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "voter",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "participant",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "day",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "inFavor",
+              type: "bool",
+            },
+          ],
+          name: "TaskVoted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+          ],
+          name: "UserJoined",
           type: "event",
         },
         {
           inputs: [
-            {
-              internalType: "uint256",
-              name: "_poolId",
-              type: "uint256",
-            },
-            {
-              internalType: "address",
-              name: "_user",
-              type: "address",
-            },
-          ],
-          name: "addToPool",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "_lockPeriod",
-              type: "uint256",
-            },
-            {
-              internalType: "string",
-              name: "_challengeName",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "_description",
-              type: "string",
-            },
-          ],
-          name: "createPool",
-          outputs: [
             {
               internalType: "uint256",
               name: "",
               type: "uint256",
             },
           ],
-          stateMutability: "payable",
+          name: "challengeIds",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
           inputs: [
             {
-              internalType: "uint256",
-              name: "_poolId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
             },
           ],
-          name: "getPoolInfo",
+          name: "challenges",
           outputs: [
             {
               internalType: "address",
@@ -199,7 +239,147 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
-              name: "lockPeriod",
+              name: "durationInDays",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "challengeName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "description",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "fundsDistributed",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "claimRefund",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "_durationInDays",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_challengeName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_description",
+              type: "string",
+            },
+          ],
+          name: "createChallenge",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "distributeRemainingFunds",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllChallenges",
+          outputs: [
+            {
+              internalType: "bytes32[]",
+              name: "",
+              type: "bytes32[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getChallengeCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "getChallengeInfo",
+          outputs: [
+            {
+              internalType: "address",
+              name: "creator",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "stakeAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalStaked",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "creationTime",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "durationInDays",
               type: "uint256",
             },
             {
@@ -224,17 +404,56 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "uint256",
-              name: "_poolId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
             },
           ],
-          name: "getPoolParticipants",
+          name: "getParticipants",
           outputs: [
             {
               internalType: "address[]",
               name: "",
               type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "_participant",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_day",
+              type: "uint256",
+            },
+          ],
+          name: "getTaskStatus",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "completed",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "votesFor",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "votesAgainst",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -256,25 +475,14 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "uint256",
-              name: "_poolId",
-              type: "uint256",
-            },
-            {
-              internalType: "address",
-              name: "_user",
-              type: "address",
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
             },
           ],
-          name: "isUserInPool",
-          outputs: [
-            {
-              internalType: "bool",
-              name: "",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
+          name: "joinChallenge",
+          outputs: [],
+          stateMutability: "payable",
           type: "function",
         },
         {
@@ -291,98 +499,31 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
-          name: "poolCounter",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
           inputs: [
             {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
             },
-          ],
-          name: "pools",
-          outputs: [
             {
               internalType: "address",
-              name: "creator",
+              name: "_participant",
               type: "address",
             },
             {
               internalType: "uint256",
-              name: "stakeAmount",
+              name: "_day",
               type: "uint256",
             },
             {
-              internalType: "uint256",
-              name: "totalStaked",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "creationTime",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "lockPeriod",
-              type: "uint256",
-            },
-            {
-              components: [
-                {
-                  internalType: "string",
-                  name: "challengeName",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "description",
-                  type: "string",
-                },
-              ],
-              internalType: "struct YourContract.PoolMetadata",
-              name: "metadata",
-              type: "tuple",
+              internalType: "bool",
+              name: "_inFavor",
+              type: "bool",
             },
           ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "_poolId",
-              type: "uint256",
-            },
-          ],
-          name: "refund",
+          name: "voteOnTask",
           outputs: [],
           stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "_poolId",
-              type: "uint256",
-            },
-          ],
-          name: "stakeToPool",
-          outputs: [],
-          stateMutability: "payable",
           type: "function",
         },
         {
