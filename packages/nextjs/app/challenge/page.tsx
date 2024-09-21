@@ -1,5 +1,6 @@
-'use client'  
-import React, { useState } from 'react';
+"use client";
+
+import React, { useState } from "react";
 
 const Challenge = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -32,10 +33,7 @@ const Challenge = () => {
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Create Challenge</h2>
             <p className="mb-4">Here you can create a new challenge.</p>
-            <button
-              onClick={toggleCreateModal}
-              className="bg-red-600 text-white px-4 py-2 rounded"
-            >
+            <button onClick={toggleCreateModal} className="bg-red-600 text-white px-4 py-2 rounded">
               Close
             </button>
           </div>
@@ -48,10 +46,7 @@ const Challenge = () => {
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Join Challenge</h2>
             <p className="mb-4">Here you can join an existing challenge.</p>
-            <button
-              onClick={toggleJoinModal}
-              className="bg-red-600 text-white px-4 py-2 rounded"
-            >
+            <button onClick={toggleJoinModal} className="bg-red-600 text-white px-4 py-2 rounded">
               Close
             </button>
           </div>
@@ -62,7 +57,3 @@ const Challenge = () => {
 };
 
 export default Challenge;
-
-
-
-

@@ -1,7 +1,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap");
 
 :root,
 [data-theme] {
@@ -38,7 +38,7 @@ p {
   @apply shadow-none;
 }
 
-/* From Uiverse.io by marcelodolza */ 
+/* From Uiverse.io by marcelodolza */
 .button {
   --primary: #ff5569;
   --neutral-1: #f7f8f7;
@@ -49,8 +49,8 @@ p {
   border-radius: var(--radius);
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
   border: none;
-  box-shadow: 0 0.5px 0.5px 1px rgba(255, 255, 255, 0.2),
-    0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 5px 0px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.5px 0.5px 1px rgba(255, 255, 255, 0.2), 0 10px 20px rgba(0, 0, 0, 0.2),
+    0 4px 5px 0px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,16 +64,17 @@ p {
   font-size: 18px;
   font-weight: 600;
 }
+
 .button:hover {
   transform: scale(1.02);
-  box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3),
-    0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3), 0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
 }
+
 .button:active {
   transform: scale(1);
-  box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3),
-    0 10px 3px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.2);
 }
+
 .button:after {
   content: "";
   position: absolute;
@@ -81,15 +82,16 @@ p {
   border-radius: var(--radius);
   border: 2.5px solid transparent;
   background: linear-gradient(var(--neutral-1), var(--neutral-2)) padding-box,
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45))
-      border-box;
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)) border-box;
   z-index: 0;
   transition: all 0.4s ease;
 }
+
 .button:hover::after {
   transform: scale(1.05, 1.1);
   box-shadow: inset 0 -1px 3px 0 rgba(255, 255, 255, 1);
 }
+
 .button::before {
   content: "";
   inset: 7px 6px 6px 6px;
@@ -99,11 +101,13 @@ p {
   filter: blur(0.5px);
   z-index: 2;
 }
+
 .state p {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .state .icon {
   position: absolute;
   left: 0;
@@ -116,6 +120,7 @@ p {
   align-items: center;
   justify-content: center;
 }
+
 .state .icon svg {
   overflow: visible;
 }
@@ -130,45 +135,52 @@ p {
   transition: opacity 0.4s ease;
   inset: -2px -3.5px;
 }
+
 .outline::before {
   content: "";
   position: absolute;
   inset: -100%;
-  background: conic-gradient(
-    from 180deg,
-    transparent 60%,
-    white 80%,
-    transparent 100%
-  );
+  background: conic-gradient(from 180deg, transparent 60%, white 80%, transparent 100%);
   animation: spin 2s linear infinite;
   animation-play-state: paused;
 }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
 @keyframes rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-rotate {
-  animation: rotate 20s linear infinite; /* Adjust the duration as needed */
-  position: relative; /* Ensure it rotates around its center */
+  animation: rotate 20s linear infinite;
+  /* Adjust the duration as needed */
+  position: relative;
+  /* Ensure it rotates around its center */
 }
 
 @keyframes float {
   0% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
+
   100% {
     transform: translateY(0px);
   }
@@ -180,13 +192,12 @@ p {
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
-}   
-
-
+}
 
 .button:hover .outline {
   opacity: 1;
 }
+
 .button:hover .outline::before {
   animation-play-state: running;
 }
@@ -197,29 +208,35 @@ p {
   opacity: 0;
   animation: slideDown 0.8s ease forwards calc(var(--i) * 0.03s);
 }
+
 .button:hover p span {
   opacity: 1;
   animation: wave 0.5s ease forwards calc(var(--i) * 0.02s);
 }
+
 .button:focus p span {
   opacity: 1;
   animation: disapear 0.6s ease forwards calc(var(--i) * 0.03s);
 }
+
 @keyframes wave {
   30% {
     opacity: 1;
     transform: translateY(4px) translateX(0) rotate(0);
   }
+
   50% {
     opacity: 1;
     transform: translateY(-3px) translateX(0) rotate(0);
     color: var(--primary);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) translateX(0) rotate(0);
   }
 }
+
 @keyframes slideDown {
   0% {
     opacity: 0;
@@ -227,24 +244,29 @@ p {
     color: var(--primary);
     filter: blur(5px);
   }
+
   30% {
     opacity: 1;
     transform: translateY(4px) translateX(0) rotate(0);
     filter: blur(0);
   }
+
   50% {
     opacity: 1;
     transform: translateY(-3px) translateX(0) rotate(0);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) translateX(0) rotate(0);
   }
 }
+
 @keyframes disapear {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
     transform: translateX(5px) translateY(20px);
@@ -257,34 +279,42 @@ p {
 .state--default .icon svg {
   animation: land 0.6s ease forwards;
 }
+
 .button:hover .state--default .icon {
   transform: rotate(45deg) scale(1.25);
 }
+
 .button:focus .state--default svg {
   animation: takeOff 0.8s linear forwards;
 }
+
 .button:focus .state--default .icon {
   transform: rotate(0) scale(1.25);
 }
+
 @keyframes takeOff {
   0% {
     opacity: 1;
   }
+
   60% {
     opacity: 1;
     transform: translateX(70px) rotate(45deg) scale(2);
   }
+
   100% {
     opacity: 0;
     transform: translateX(160px) rotate(45deg) scale(0);
   }
 }
+
 @keyframes land {
   0% {
     transform: translateX(-60px) translateY(30px) rotate(-50deg) scale(2);
     opacity: 0;
     filter: blur(3px);
   }
+
   100% {
     transform: translateX(0) translateY(0) rotate(0);
     opacity: 1;
@@ -302,21 +332,26 @@ p {
   left: -5px;
   background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.5));
 }
+
 .button:focus .state--default .icon:before {
   animation: contrail 0.8s linear forwards;
 }
+
 @keyframes contrail {
   0% {
     width: 0;
     opacity: 1;
   }
+
   8% {
     width: 15px;
   }
+
   60% {
     opacity: 0.7;
     width: 80px;
   }
+
   100% {
     opacity: 0;
     width: 160px;
@@ -330,30 +365,38 @@ p {
   display: flex;
   position: relative;
 }
+
 .state--default span:nth-child(4) {
   margin-right: 5px;
 }
+
 .state--sent {
   display: none;
 }
+
 .state--sent svg {
   transform: scale(1.25);
   margin-right: 8px;
 }
+
 .button:focus .state--default {
   position: absolute;
 }
+
 .button:focus .state--sent {
   display: flex;
 }
+
 .button:focus .state--sent span {
   opacity: 0;
   animation: slideDown 0.8s ease forwards calc(var(--i) * 0.2s);
 }
+
 .button:focus .state--sent .icon svg {
   opacity: 0;
   animation: appear 1.2s ease forwards 0.8s;
 }
+
 @keyframes appear {
   0% {
     opacity: 0;
@@ -361,19 +404,121 @@ p {
     color: var(--primary);
     filter: blur(4px);
   }
+
   30% {
     opacity: 1;
     transform: scale(0.6);
     filter: blur(1px);
   }
+
   50% {
     opacity: 1;
     transform: scale(1.2);
     filter: blur(0);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
   }
 }
 
+.btn-chlng {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1em 0em 1em 1em;
+  background-color: yellow;
+  cursor: pointer;
+  box-shadow: 4px 6px 0px black;
+  border: 4px solid;
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  z-index: 100;
+  transition: box-shadow 250ms, transform 250ms, filter 50ms;
+}
+
+.btn-chlng:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 3px 0px black;
+}
+
+.btn-chlng:active {
+  filter: saturate(0.75);
+}
+
+.btn-chlng::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: pink;
+  z-index: -1;
+  transform: translateX(-100%);
+  transition: transform 250ms;
+}
+
+.btn-chlng:hover::after {
+  transform: translateX(0);
+}
+
+.bgContainer {
+  position: relative;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  overflow: hidden;
+  max-width: 41%;
+  /* adjust this if the .btn-chlng text is not proper */
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.bgContainer span {
+  position: relative;
+  transform: translateX(-100%);
+  transition: all 250ms;
+}
+
+..btn-chlng:hover .bgContainer>span {
+  transform: translateX(0);
+}
+
+.arrowContainer {
+  padding: 1em;
+  margin-inline-end: 1em;
+  border: 4px solid;
+  border-radius: 50%;
+  background-color: pink;
+  position: relative;
+  overflow: hidden;
+  transition: transform 250ms, background-color 250ms;
+  z-index: 100;
+}
+
+.arrowContainer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: yellow;
+  transform: translateX(-100%);
+  z-index: -1;
+  transition: transform 250ms ease-in-out;
+}
+
+.btn-chlng:hover .arrowContainer::after {
+  transform: translateX(0);
+}
+
+.btn-chlng:hover .arrowContainer {
+  transform: translateX(5px);
+}
+
+.btn-chlng:active .arrowContainer {
+  transform: translateX(8px);
+}
+
+.arrowContainer svg {
+  vertical-align: middle;
+}
