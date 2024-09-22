@@ -23,6 +23,7 @@ type WriteOnlyFunctionFormProps = {
   onChange: () => void;
   contractAddress: Address;
   inheritedFrom?: string;
+  specific?: boolean;
 };
 
 export const WriteOnlyFunctionForm = ({
@@ -31,6 +32,7 @@ export const WriteOnlyFunctionForm = ({
   onChange,
   contractAddress,
   inheritedFrom,
+  specific,
 }: WriteOnlyFunctionFormProps) => {
   const [form, setForm] = useState<Record<string, any>>(() => getInitialFormState(abiFunction));
   const [txValue, setTxValue] = useState<string | bigint>("");
@@ -118,10 +120,9 @@ export const WriteOnlyFunctionForm = ({
             </div>
           )}
           <div
-            className={`flex ${
-              writeDisabled &&
+            className={`flex ${writeDisabled &&
               "tooltip before:content-[attr(data-tip)] before:right-[-10px] before:left-auto before:transform-none"
-            }`}
+              }`}
             data-tip={`${writeDisabled && "Wallet not connected or in the wrong network"}`}
           >
             <button className="btn btn-secondary btn-sm" disabled={writeDisabled || isPending} onClick={handleWrite}>

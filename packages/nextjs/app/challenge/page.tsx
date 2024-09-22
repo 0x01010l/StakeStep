@@ -1,8 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
+import { BarsArrowUpIcon } from "@heroicons/react/20/solid";
+import { ContractUI } from "~~/app/debug/_components/contract";
+import { ContractWriteMethods } from "~~/app/debug/_components/contract/ContractWriteMethods";
+import { useDeployedContractInfo, useNetworkColor } from "~~/hooks/scaffold-eth";
+import { ContractName, GenericContract } from "~~/utils/scaffold-eth/contract";
+import { useAllContracts } from "~~/utils/scaffold-eth/contractsData";
+
+const selectedContractStorageKey = "scaffoldEth2.selectedContract";
 
 const Challenge = () => {
+  const contractsData = useAllContracts();
+  const contractNames = useMemo(() => Object.keys(contractsData) as ContractName[], [contractsData]);
+
+  const [selectedContract, setSelectedContract] = useLocalStorage<ContractName>(
+    selectedContractStorageKey,
+    contractNames[0],
+    { initializeWithValue: false },
+  );
+
+  const [refreshDisplayVariables, triggerRefreshDisplayVariables] = useReducer(value => !value, false);
+  const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo("YourContract");
+
+  useEffect(() => {
+    if (!contractNames.includes(selectedContract)) {
+      setSelectedContract(contractNames[0]);
+    }
+  }, [contractNames, selectedContract, setSelectedContract]);
+
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isJoinModalOpen, setJoinModalOpen] = useState(false);
 
@@ -10,7 +37,7 @@ const Challenge = () => {
   const toggleJoinModal = () => setJoinModalOpen(!isJoinModalOpen);
 
   return (
-    <div className="flex justify-center items-center h-screen -mt-20">
+    <div className="flex justify-center items-center bg-[#e9d8a6] text-[#333333] h-screen -mt-20">
       {/* Create Challenge Button */}
       <button
         onClick={toggleCreateModal}
@@ -33,6 +60,11 @@ const Challenge = () => {
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Create Challenge</h2>
             <p className="mb-4">Here you can create a new challenge.</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="createChallenge"
+            />
             <button onClick={toggleCreateModal} className="bg-red-600 text-white px-4 py-2 rounded">
               Close
             </button>
@@ -46,6 +78,12 @@ const Challenge = () => {
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Join Challenge</h2>
             <p className="mb-4">Here you can join an existing challenge.</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="joinChallenge"
+            />
+
             <button onClick={toggleJoinModal} className="bg-red-600 text-white px-4 py-2 rounded">
               Close
             </button>

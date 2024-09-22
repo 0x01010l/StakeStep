@@ -5,14 +5,17 @@ import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/
 export const ContractWriteMethods = ({
   onChange,
   deployedContractData,
+  strictFn,
 }: {
   onChange: () => void;
   deployedContractData: Contract<ContractName>;
+  strictFn?: string; // strictFn is optional, it will be the function name if passed
 }) => {
   if (!deployedContractData) {
     return null;
   }
 
+  // Extract functions from the ABI that are writeable (non-view, non-pure)
   const functionsToDisplay = (
     (deployedContractData.abi as Abi).filter(part => part.type === "function") as AbiFunction[]
   )
@@ -28,20 +31,26 @@ export const ContractWriteMethods = ({
     })
     .sort((a, b) => (b.inheritedFrom ? b.inheritedFrom.localeCompare(a.inheritedFrom) : 1));
 
-  if (!functionsToDisplay.length) {
+  // Filter for strictFn if provided
+  const filteredFunctions = strictFn
+    ? functionsToDisplay.filter(({ fn }) => fn.name === strictFn) // Only display the function that matches strictFn
+    : functionsToDisplay;
+
+  if (!filteredFunctions.length) {
     return <>No write methods</>;
   }
 
   return (
     <>
-      {functionsToDisplay.map(({ fn, inheritedFrom }, idx) => (
+      {filteredFunctions.map(({ fn, inheritedFrom }, idx) => (
         <WriteOnlyFunctionForm
           abi={deployedContractData.abi as Abi}
-          key={`${fn.name}-${idx}}`}
+          key={`${fn.name}-${idx}`}
           abiFunction={fn}
           onChange={onChange}
           contractAddress={deployedContractData.address}
           inheritedFrom={inheritedFrom}
+          specific={strictFn ? true : false}
         />
       ))}
     </>
