@@ -10,6 +10,76 @@ By leveraging blockchain technology and smart contracts, StakeStep ensures trans
 
 Whether you're looking to exercise more, save money, learn a new skill, or break a bad habit, StakeStep provides the structure and incentives to help you succeed. With StakeStep, transform your intentions into actions and your actions into lasting habits.
 
+## StakeStep : Know the Contract
+
+StakeStep is a Solidity smart contract designed to facilitate habit-building challenges on the Ethereum blockchain. It allows users to create, join, and participate in challenges where they stake ETH as an incentive to complete daily tasks. The contract incorporates a voting system for task verification and a fair distribution mechanism for rewards.
+
+## Technical Documentation
+
+### Core Functions
+
+1. `createChallenge(bytes32 _challengeId, uint256 _durationInDays, string memory _challengeName, string memory _description) external payable`
+
+   - Creates a new challenge with a unique ID, duration, name, and description.
+   - Requires the creator to stake ETH.
+
+2. `joinChallenge(bytes32 _challengeId) external payable`
+
+   - Allows users to join an existing challenge by staking the required amount of ETH.
+
+3. `voteOnTask(bytes32 _challengeId, address _participant, uint256 _day, bool _inFavor) external`
+
+   - Enables participants to vote on the completion of tasks for other participants.
+   - A task is marked as completed when it receives majority votes.
+
+4. `claimRefund(bytes32 _challengeId) external`
+
+   - Allows participants to claim a refund proportional to their completed tasks after the challenge ends.
+
+5. `distributeRemainingFunds(bytes32 _challengeId) external`
+   - Distributes any remaining funds to top performers after a waiting period.
+
+### View Functions
+
+6. `getAllChallenges() external view returns (bytes32[] memory)`
+
+   - Returns an array of all challenge IDs.
+
+7. `getChallengeCount() external view returns (uint256)`
+
+   - Returns the total number of challenges created.
+
+8. `getChallengeInfo(bytes32 _challengeId) external view`
+
+   - Returns detailed information about a specific challenge.
+
+9. `getParticipants(bytes32 _challengeId) external view returns (address[] memory)`
+
+   - Returns an array of participant addresses for a given challenge.
+
+10. `getTaskStatus(bytes32 _challengeId, address _participant, uint256 _day) external view`
+    - Returns the status of a specific task, including completion and vote counts.
+
+### Structs
+
+- `Task`: Represents a daily task with completion status and voting information.
+- `Challenge`: Contains all information related to a challenge, including participants, tasks, and stake amounts.
+
+### Events
+
+- `ChallengeCreated`: Emitted when a new challenge is created.
+- `UserJoined`: Emitted when a user joins a challenge.
+- `TaskCompleted`: Emitted when a task is marked as completed.
+- `TaskVoted`: Emitted when a vote is cast for a task.
+- `FundsRefunded`: Emitted when a participant claims a refund.
+- `AdditionalFundsDistributed`: Emitted when remaining funds are distributed to top performers.
+
+### Other Features
+
+- It includes a `receive()` function to accept ETH payments.
+
+This smart contract provides a robust framework for creating and managing habit-building challenges with financial incentives, peer verification, and fair reward distribution.
+
 ## Use Cases
 
 1. **Fitness Challenge**
