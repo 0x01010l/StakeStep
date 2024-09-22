@@ -5,7 +5,7 @@
 ## Introduction
 
 - 📽️ Watch Demo : [HERE](https://youtu.be/lRuzKyqinx0)
-- 👾 Live App: [HERE](https://stakestep-prj96z7fo-arjun-cs-projects.vercel.app)
+- 👾 Live App: [HERE](https://stakestep.vercel.app/)
 - 📜 PPT : [HERE](https://www.canva.com/design/DAGRclnJV1k/AXQen8p6JTo9EL9aZvnuzA/view?utm_content=DAGRclnJV1k&utm_campaign=designshare&utm_medium=link&utm_source=editor)
 
 StakeStep is a revolutionary habit-forming app that combines the power of social accountability with financial incentives. In today's fast-paced world, many of us struggle to build and maintain positive habits, despite our best intentions. StakeStep addresses this challenge by creating a unique ecosystem where users can set personal goals, invite friends or colleagues to join their accountability pool, and put their money where their mouth is.
