@@ -534,6 +534,535 @@ const deployedContracts = {
       inheritedFunctions: {},
     },
   },
+  11155111: {
+    YourContract: {
+      address: "0x0a36a9fA25155C57b72744aB1d369bA772bc40e8",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_owner",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "participant",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "AdditionalFundsDistributed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "creator",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "stakeAmount",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "durationInDays",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "challengeName",
+              type: "string",
+            },
+          ],
+          name: "ChallengeCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "FundsRefunded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "day",
+              type: "uint256",
+            },
+          ],
+          name: "TaskCompleted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "voter",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "participant",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "day",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "inFavor",
+              type: "bool",
+            },
+          ],
+          name: "TaskVoted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "challengeId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+          ],
+          name: "UserJoined",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "challengeIds",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          name: "challenges",
+          outputs: [
+            {
+              internalType: "address",
+              name: "creator",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "stakeAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalStaked",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "creationTime",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "durationInDays",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "challengeName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "description",
+              type: "string",
+            },
+            {
+              internalType: "bool",
+              name: "fundsDistributed",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "claimRefund",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "_durationInDays",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_challengeName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_description",
+              type: "string",
+            },
+          ],
+          name: "createChallenge",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "distributeRemainingFunds",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllChallenges",
+          outputs: [
+            {
+              internalType: "bytes32[]",
+              name: "",
+              type: "bytes32[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getChallengeCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "getChallengeInfo",
+          outputs: [
+            {
+              internalType: "address",
+              name: "creator",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "stakeAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "totalStaked",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "creationTime",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "durationInDays",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "participantCount",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "challengeName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "description",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "getParticipants",
+          outputs: [
+            {
+              internalType: "address[]",
+              name: "",
+              type: "address[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "_participant",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_day",
+              type: "uint256",
+            },
+          ],
+          name: "getTaskStatus",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "completed",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "votesFor",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "votesAgainst",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "greeting",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+          ],
+          name: "joinChallenge",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "_challengeId",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "_participant",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "_day",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "_inFavor",
+              type: "bool",
+            },
+          ],
+          name: "voteOnTask",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
+    },
+  },
 } as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;
