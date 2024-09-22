@@ -16,6 +16,8 @@ StakeStep is a Solidity smart contract designed to facilitate habit-building cha
 
 ## Technical Documentation
 
+Smart Contract Deployed on Sepolia : [HERE](https://sepolia.etherscan.io/address/0x0a36a9fA25155C57b72744aB1d369bA772bc40e8)
+
 ### Core Functions
 
 1. `createChallenge(bytes32 _challengeId, uint256 _durationInDays, string memory _challengeName, string memory _description) external payable`
@@ -110,80 +112,7 @@ This smart contract provides a robust framework for creating and managing habit-
    - Pool: Coworkers or professional network
    - Verification: Time tracking app integration or end-of-day reports
 
-5. **Quit Smoking**
-
-   - Goal: No cigarettes for 60 days
-   - Stake: $200 worth of cryptocurrency
-   - Pool: Support group members
-   - Verification: Daily check-ins and consensus voting by pool members
-
-6. **Mindfulness Practice**
-
-   - Goal: Meditate for 20 minutes daily for 30 days
-   - Stake: 0.08 ETH
-   - Pool: Meditation group members
-   - Verification: Integration with meditation apps or daily logged sessions
-
-7. **Writing Challenge**
-
-   - Goal: Write 500 words daily for 30 days
-   - Stake: 0.1 ETH
-   - Pool: Writing group or accountability partners
-   - Verification: Word count submissions or integration with writing apps
-
-8. **Hydration Habit**
-   - Goal: Drink 8 glasses of water daily for 21 days
-   - Stake: 0.05 ETH
-   - Pool: Health-conscious friends
-   - Verification: Manual logging or smart water bottle integration
-
 These use cases demonstrate the versatility of StakeStep across various personal development areas, showcasing how it can be adapted to different goals, timeframes, and verification methods. The app's flexibility allows users to create custom challenges tailored to their specific needs and interests, all while leveraging the power of social accountability and financial incentives.
-
-## Evaluation of StakeStep Against Hackathon Tracks
-
-### 1. Blockchain for Sustainable Development Goals (SDGs)
-
-StakeStep aligns well with this track, particularly for the following SDGs:
-
-- Goal 3: Good Health and Well-being (fitness, mindfulness, quitting smoking)
-- Goal 4: Quality Education (language learning, productivity)
-- Goal 12: Responsible Consumption (savings goals)
-
-Strengths:
-
-- Encourages positive habit formation, contributing to individual and community well-being
-- Uses blockchain for transparency and accountability
-
-Areas for improvement:
-
-- Could more directly address global challenges like poverty or climate action
-
-### 2. Onboarding the Future - Ethereum for Everyone
-
-StakeStep has potential in this track:
-
-Strengths:
-
-- User-friendly concept that could introduce new users to Ethereum
-- Gamification elements through challenges and rewards
-
-Areas for improvement:
-
-- Could incorporate more privacy-enhancing features
-- Might need additional onboarding features for crypto newcomers
-
-### 3. Ethereum and L2s
-
-StakeStep is well-suited for this track:
-
-Strengths:
-
-- Uses smart contracts for managing stakes and consensus
-- Could benefit from L2 solutions for faster, cheaper transactions
-
-Areas for improvement:
-
-- Could explore more complex DeFi integrations
 
 ## Quickstart
 

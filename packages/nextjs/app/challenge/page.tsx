@@ -40,11 +40,13 @@ const Challenge = () => {
   const [isJoinModalOpen, setJoinModalOpen] = useState(false);
   const [isVoteModalOpen, setVoteModalOpen] = useState(false);
   const [isInfoModalOpen, setInfoModalOpen] = useState(false);
+  const [isClaimModalOpen, setClaimModalOpen] = useState(false);
 
   const toggleCreateModal = () => setCreateModalOpen(!isCreateModalOpen);
   const toggleJoinModal = () => setJoinModalOpen(!isJoinModalOpen);
   const toggleVoteModal = () => setVoteModalOpen(!isVoteModalOpen);
   const toggleInfoModal = () => setInfoModalOpen(!isInfoModalOpen);
+  const toggleClaimModalOpen = () => setClaimModalOpen(!isClaimModalOpen);
 
   // const getChallengeInfo = (challengeID: any) => {
   //    const { data: lastResponse, isLoading: isLastResponseLoading } = useScaffoldReadContract({
@@ -61,31 +63,62 @@ const Challenge = () => {
       {/* Create Challenge Button */}
       <button
         onClick={toggleCreateModal}
-        className="bg-blue-600 hover:bg-blue-700 w-60 h-32  text-white font-bold text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
+        className="bg-blue-600 hover:bg-blue-700 w-60 h-40  text-white font-bold text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
       >
-        Create Challenge
+        🔥 Create Challenge
       </button>
       {/* Join Challenge Button */}
       <button
         onClick={toggleJoinModal}
-        className="bg-green-600 hover:bg-green-700 text-white w-60   h-32 font-bold text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
+        className="bg-green-600 hover:bg-green-700 text-white w-60   h-40 font-bold text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
       >
-        Join Challenge
+        🥾 Join Challenge
       </button>
       {/* Vote Button */}
       <button
         onClick={toggleVoteModal}
-        className="bg-red-600 hover:bg-red-700 text-white font-bold w-60 h-32 text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
+        className="bg-red-600 hover:bg-red-700 text-white font-bold w-60 h-40 text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
       >
-        Vote
+        🗳️ Vote
       </button>
       {/* Info Button */}
       <button
         onClick={toggleInfoModal}
-        className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold w-60 h-32 text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
+        className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold w-60 h-40 text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
       >
-        Info
+        👀 Info
       </button>
+      {/* Claim Button */}
+      <button
+        onClick={toggleInfoModal}
+        className="bg-gray-600 hover:bg-gray-700 text-white font-bold w-70 h-40 text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
+      >
+        🚀 Claim!
+      </button>
+      {/* Claim Modal */}
+      {isInfoModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto my-10">
+            <h2 className="text-2xl font-bold mb-4">Claim</h2>
+            <p className="mb-4">Claim your refunds</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="claimRefund"
+            />
+            <p className="mb-4">Distribute Remaining Funds [ADMIN ONLY]</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="distributeRemainingFunds"
+            />
+
+            <button onClick={toggleInfoModal} className="bg-red-600 text-white px-4 py-2 rounded mt-4">
+              Close
+            </button>
+          </div>
+        </div>
+      )}{" "}
       {/* Create Challenge Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
