@@ -2,7 +2,13 @@ import { Abi, AbiFunction } from "abitype";
 import { ReadOnlyFunctionForm } from "~~/app/debug/_components/contract";
 import { Contract, ContractName, GenericContract, InheritedFunctions } from "~~/utils/scaffold-eth/contract";
 
-export const ContractReadMethods = ({ deployedContractData }: { deployedContractData: Contract<ContractName> }) => {
+export const ContractReadMethods = ({
+  deployedContractData,
+  strictFn,
+}: {
+  deployedContractData: Contract<ContractName>;
+  strictFn?: string; // strictFn is optional, it will be the function name if passed
+}) => {
   if (!deployedContractData) {
     return null;
   }
@@ -22,6 +28,11 @@ export const ContractReadMethods = ({ deployedContractData }: { deployedContract
       };
     })
     .sort((a, b) => (b.inheritedFrom ? b.inheritedFrom.localeCompare(a.inheritedFrom) : 1));
+
+  // Filter for strictFn if provided
+  const filteredFunctions = strictFn
+    ? functionsToDisplay.filter(({ fn }) => fn.name === strictFn) // Only display the function that matches strictFn
+    : functionsToDisplay;
 
   if (!functionsToDisplay.length) {
     return <>No read methods</>;
