@@ -32,12 +32,14 @@ const Challenge = () => {
 
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [isJoinModalOpen, setJoinModalOpen] = useState(false);
+  const [isVoteModalOpen, setVoteModalOpen] = useState(false);
 
   const toggleCreateModal = () => setCreateModalOpen(!isCreateModalOpen);
   const toggleJoinModal = () => setJoinModalOpen(!isJoinModalOpen);
+  const toggleVoteModal = () => setVoteModalOpen(!isVoteModalOpen);
 
   return (
-    <div className="flex justify-center items-center bg-[#e9d8a6] text-[#333333] h-screen -mt-20">
+    <div className="flex justify-between px-4 items-center bg-[#e9d8a6] text-[#333333] h-screen -mt-20">
       {/* Create Challenge Button */}
       <button
         onClick={toggleCreateModal}
@@ -52,6 +54,14 @@ const Challenge = () => {
         className="bg-green-600 hover:bg-green-700 text-white font-bold text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300 ml-20"
       >
         Join Challenge
+      </button>
+
+      {/* Vote Button */}
+      <button
+        onClick={toggleVoteModal}
+        className="bg-red-600 hover:bg-red-700 text-white font-bold text-4xl py-8 px-12 rounded-lg shadow-2xl transform hover:scale-105 transition duration-300"
+      >
+        Vote
       </button>
 
       {/* Create Challenge Modal */}
@@ -85,6 +95,25 @@ const Challenge = () => {
             />
 
             <button onClick={toggleJoinModal} className="bg-red-600 text-white px-4 py-2 rounded">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Vote Modal */}
+      {isVoteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">Vote your frens</h2>
+            <p className="mb-4">If they did the deed give show them green flag. Else you know the drill.</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="voteOnTask"
+            />
+
+            <button onClick={toggleVoteModal} className="bg-red-600 text-white px-4 py-2 rounded">
               Close
             </button>
           </div>
