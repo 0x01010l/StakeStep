@@ -2,6 +2,8 @@
 
 # StakeStep: Habit Formation with Accountability
 
+![stakestep](./ss.png)
+
 ## Introduction
 
 - 📽️ Watch Demo : [HERE](https://youtu.be/lRuzKyqinx0)
