@@ -19,6 +19,18 @@ const Challenge = () => {
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
   const { data: deployedContractData, isLoading: deployedContractLoading } = useDeployedContractInfo("YourContract");
 
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
+  const [isJoinModalOpen, setJoinModalOpen] = useState(false);
+  const [isVoteModalOpen, setVoteModalOpen] = useState(false);
+  const [isInfoModalOpen, setInfoModalOpen] = useState(false);
+  const [isClaimModalOpen, setClaimModalOpen] = useState(false);
+
+  const toggleCreateModal = () => setCreateModalOpen(!isCreateModalOpen);
+  const toggleJoinModal = () => setJoinModalOpen(!isJoinModalOpen);
+  const toggleVoteModal = () => setVoteModalOpen(!isVoteModalOpen);
+  const toggleInfoModal = () => setInfoModalOpen(!isInfoModalOpen);
+  const toggleClaimModal = () => setClaimModalOpen(!isClaimModalOpen);
+
   useEffect(() => {
     if (connectedAddress) {
       const provider = new ethers.providers.Web3Provider((window as any).ethereum);
@@ -105,7 +117,7 @@ const Challenge = () => {
         🚀 Claim!
       </button>
       {/* Claim Modal */}
-      {isInfoModalOpen && (
+      {isClaimModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto my-10">
             <h2 className="text-2xl font-bold mb-4">Claim</h2>
@@ -122,13 +134,82 @@ const Challenge = () => {
               strictFn="distributeRemainingFunds"
             />
 
+            <button onClick={toggleClaimModal} className="bg-red-600 text-white px-4 py-2 rounded mt-4">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Create Challenge Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">Create Challenge</h2>
+            <p className="mb-4">Here you can create a new challenge.</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="createChallenge"
+            />
+            <button onClick={toggleCreateModal} className="bg-red-600 text-white px-4 py-2 rounded">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Join Challenge Modal */}
+      {isJoinModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">Join Challenge</h2>
+            <p className="mb-4">Here you can join an existing challenge.</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="joinChallenge"
+            />
+
+            <button onClick={toggleJoinModal} className="bg-red-600 text-white px-4 py-2 rounded">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Info Modal */}
+      {isInfoModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto my-10">
+            <h2 className="text-2xl font-bold mb-4">Know Your Challenge</h2>
+            <p className="mb-4">Enter the challengeID</p>
+            <ContractReadMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="getChallengeInfo"
+            />
             <button onClick={toggleInfoModal} className="bg-red-600 text-white px-4 py-2 rounded mt-4">
               Close
             </button>
           </div>
         </div>
       )}
-      {/* Other modals... */}
+      {/* Vote Modal */}
+      {isVoteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold mb-4">Vote your frens</h2>
+            <p className="mb-4">If they did the deed give show them green flag. Else you know the drill.</p>
+            <ContractWriteMethods
+              deployedContractData={deployedContractData}
+              onChange={triggerRefreshDisplayVariables}
+              strictFn="voteOnTask"
+            />
+
+            <button onClick={toggleVoteModal} className="bg-red-600 text-white px-4 py-2 rounded">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
